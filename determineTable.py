@@ -3,7 +3,10 @@ import unittest
 
 '''
 
-- de vieren en de nullen zijn nog meh
+- de drieen gaan fout in de kleine sample. 
+    - Het probleem is dat de contour het in tweeen snijdt
+    - maar als ik met de treshold muck, dan gaat hij de lijnen weer als contour herkennen
+- in de grote variant heeft hij enkele contouren dubbel, weet niet welke (mis de tools om dat snel te herkennen)
 
 Het kan werken, maar het is niet al te interessant tbh
 het voelt te gammel aan
