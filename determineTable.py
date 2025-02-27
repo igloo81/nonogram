@@ -2,6 +2,9 @@ import math
 import unittest
 
 '''
+
+- de vieren en de nullen zijn nog meh
+
 Het kan werken, maar het is niet al te interessant tbh
 het voelt te gammel aan
 Nodig:
