@@ -107,13 +107,14 @@ def computeSkippedLines(coordinates, start, slope):
     
 def divideOverLeftAndTop(foundDigits, A, alpha, B, beta):   # naming with distributeDigitsOverLeftAndTop
     digitsInGrid = putDigitsInGrid(foundDigits, A, alpha, B, beta)
-    (lefties, toppies) = distributeDigitsOverLeftAndTop(digitsInGrid)
+    numbersInGrid = combineDigits(digitsInGrid)
+    (lefties, toppies) = distributeDigitsOverLeftAndTop(numbersInGrid)
     return (lefties, toppies)
 
 
 # putDigitsInGrid = [(x,y,digit)]
 def putDigitsInGrid(foundDigits, A, alpha, B, beta):
-    digitsInGrid = []
+    digitsInGrid = {}
     for (box, digit) in foundDigits:
         center = (box[0] + box[2]/2, box[1] + box[3]/2)
         indexX = round((center[0] - A) / alpha)
@@ -124,10 +125,19 @@ def putDigitsInGrid(foundDigits, A, alpha, B, beta):
             predictionX - alpha/2 < box[0] and predictionX + alpha/2 > box[0] + box[2] and
             predictionY - beta/2 < box[1] and predictionY + beta/2 > box[1] + box[3]
             ):
-            tuple = ((indexX, indexY), box, digit)
-            digitsInGrid.append(tuple)
+            digitsInGrid.setdefault((indexX, indexY), []).append((box, digit))
     return digitsInGrid
     
+def combineDigits(digitsInGrid):
+    result = []
+    for ((indexX, indexY), digits) in digitsInGrid.items():
+        number = 0
+        for (box, digit) in sorted(digits, key=lambda tuple: tuple[0]):
+            number = number * 10 + digit
+        result.append(((indexX, indexY), number))
+    return result
+
+
 def distributeDigitsOverLeftAndTop(digitsInGrid):
     lefties = []
     toppies = []
@@ -137,13 +147,13 @@ def distributeDigitsOverLeftAndTop(digitsInGrid):
         if (sumLeftMinusTop < 0):
             candidateIndex = sorted([index for index in range(0, len(digitsInGrid))], key=lambda index: digitsInGrid[index][0][0])[0]
             candidate = digitsInGrid[candidateIndex]
-            sumLeftMinusTop += candidate[2]
+            sumLeftMinusTop += candidate[1]
             lefties.append(candidate)
             digitsInGrid.pop(candidateIndex)
         else:
             candidateIndex = sorted([index for index in range(0, len(digitsInGrid))], key=lambda index: digitsInGrid[index][0][1])[0]
             candidate = digitsInGrid[candidateIndex]
-            sumLeftMinusTop -= candidate[2]
+            sumLeftMinusTop -= candidate[1]
             toppies.append(candidate)
             digitsInGrid.pop(candidateIndex)
     return (lefties, toppies)
