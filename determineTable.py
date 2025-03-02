@@ -140,8 +140,8 @@ def putDigitsInGrid(foundDigits, A, alpha, B, beta):
         predictionX = indexX * alpha + A
         predictionY = indexY * beta + B
         if (
-            predictionX - alpha/2 < box[0] and predictionX + alpha/2 > box[0] + box[2] and
-            predictionY - beta/2 < box[1] and predictionY + beta/2 > box[1] + box[3]
+            predictionX - alpha/2 <= box[0] and predictionX + alpha/2 >= box[0] + box[2] and
+            predictionY - beta/2 <= box[1] and predictionY + beta/2 >= box[1] + box[3]
             ):
             digitsInGrid.setdefault((indexX, indexY), []).append((box, digit))
     return digitsInGrid
