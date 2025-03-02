@@ -22,11 +22,12 @@ import unittest
 '''
 
 class NonogramContour:
-    def __init__(self, contour, bounding_rect, digit, digit_image):
+    def __init__(self, contour, bounding_rect, digit, digit_image, digit_image_resized):
         self.contour = contour
         self.bounding_rect = bounding_rect
         self.digit = digit
         self.digit_image = digit_image
+        self.digit_image_resized = digit_image_resized
 
 
 def compute_grid_parameters(contours):
