@@ -18,14 +18,16 @@ fonts = [
 ]
 font = cv2.FONT_HERSHEY_SIMPLEX
 font_scale = (1, 10)
-angle = (-10, 10)
+angle = (-5, 5)
 thickness = 2
 color = (255, 255, 255)  # White color for the digits
 shift = 2
 
 
 def create_random_digit_image():
-    digit = random.randint(0, 9)
+    # we had a lot of issues with ones, so we add more of those
+    digit = random.choice([0,1,2,3,4,5,6,7,8,9,1,1])
+
     font = random.choice(fonts)
     font_scale_digit = random.randint(font_scale[0], font_scale[1])
     text_size = cv2.getTextSize(str(digit), font, font_scale_digit, thickness)[0]
