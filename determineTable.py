@@ -22,6 +22,28 @@ import unittest
 '''
 
 
+def compute_grid_parameters(found_digits):
+    # First on the rows
+    centers = [(box[0] + box[2]/2, box[1] + box[3]/2) for box,_ in found_digits]
+    ((A, alpha), column_costs) = compute_axis_parameters(set([int(center[0]) for center in centers]))
+    ((B, beta), row_costs) = compute_axis_parameters(set([int(center[1]) for center in centers]))
+    return (A, alpha, B, beta)
+
+def compute_axis_parameters(values):
+    min_grid_size = 10
+    max_grid_size = 100
+    options = [((grid_offset, grid_size), compute_costs(values, grid_offset, grid_size)) for grid_size in range(min_grid_size, max_grid_size) for grid_offset in range(0, grid_size)]
+    optimum = sorted(options, key=lambda tuple: -tuple[1])[0]
+    return optimum
+
+
+def compute_costs(values, offset, size):
+    costs = 0
+    for value in values:
+        index = determineIndex(value, offset, size)
+        difference = (offset + index * size) - value
+        costs += math.exp(-abs(difference / size))
+    return costs
 
 def determineIndex(coordinate, start, slope):
     return round((coordinate - start) / slope)
