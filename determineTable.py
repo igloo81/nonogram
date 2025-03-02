@@ -3,21 +3,17 @@ import unittest
 
 '''
 
-- de drieen gaan fout in de kleine sample. 
-    - Het probleem is dat de contour het in tweeen snijdt
-    - maar als ik met de treshold muck, dan gaat hij de lijnen weer als contour herkennen
-- in de grote variant heeft hij enkele contouren dubbel, weet niet welke (mis de tools om dat snel te herkennen)
-- we kunnen iets met de hierarchy doen van de digits
+- de wikipedia sample gaat goed!
+- sample gaat goed!
+- sample3 gaat goed
+- sample5 faalt op herkennen van enen. Door het rescalen oid worden de enen hol van binnen
 
-Het kan werken, maar het is niet al te interessant tbh
-het voelt te gammel aan
-Nodig:
-- OCR gaat echt fout. Het is ook een precisie werkje. Er gaat redelijk wat kapot als ik shit wijzig
-- fixen preprocess
-- use grid (improve maybe, remove beta parameter, the grid should be square)
-- extract the digits
-
-
+- sample4 faalt door bepaling grid
+- andere langt niet altijd
+    issues door verwijderen lijnen met thresholds
+    het herkennen van drieen gaat ook soms fout omdat
+    herkennen van digits met twee cijfers is iffy, doordat extract_digit_image_from_contour een vierkante slice pakt (ipv met nullen te beginnen en dan het rechthoekige stukje er in te frotten)
+    digit grid herkennen gaat fout in sample4 doordat y een andere step heeft en omdat het nogal precies komt (misschien werken met min & max)!
 
 - POC (python)
 - Unit tested (kotlin?)
@@ -108,8 +104,8 @@ def computeSkippedLines(coordinates, start, slope):
 def divideOverLeftAndTop(foundDigits, A, alpha, B, beta):   # naming with distributeDigitsOverLeftAndTop
     digitsInGrid = putDigitsInGrid(foundDigits, A, alpha, B, beta)
     numbersInGrid = combineDigits(digitsInGrid)
-    (lefties, toppies) = distributeDigitsOverLeftAndTop(numbersInGrid)
-    return (lefties, toppies)
+    (lefties, toppies, sumLeftMinusTop) = distributeDigitsOverLeftAndTop(numbersInGrid)
+    return (lefties, toppies, sumLeftMinusTop)
 
 
 # putDigitsInGrid = [(x,y,digit)]
@@ -156,7 +152,7 @@ def distributeDigitsOverLeftAndTop(digitsInGrid):
             sumLeftMinusTop -= candidate[1]
             toppies.append(candidate)
             digitsInGrid.pop(candidateIndex)
-    return (lefties, toppies)
+    return (lefties, toppies, sumLeftMinusTop)
 
 
 
