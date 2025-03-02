@@ -21,10 +21,17 @@ import unittest
 - double digit numbers
 '''
 
+class NonogramContour:
+    def __init__(self, contour, bounding_rect, digit, digit_image):
+        self.contour = contour
+        self.bounding_rect = bounding_rect
+        self.digit = digit
+        self.digit_image = digit_image
 
-def compute_grid_parameters(found_digits):
+
+def compute_grid_parameters(contours):
     # First on the rows
-    centers = [(box[0] + box[2]/2, box[1] + box[3]/2) for box,_ in found_digits]
+    centers = [(contour.bounding_rect[0] + contour.bounding_rect[2]/2, contour.bounding_rect[1] + contour.bounding_rect[3]/2) for contour in contours]
     ((A, alpha), column_costs) = compute_axis_parameters(set([int(center[0]) for center in centers]))
     ((B, beta), row_costs) = compute_axis_parameters(set([int(center[1]) for center in centers]))
     return (A, alpha, B, beta)
@@ -133,25 +140,25 @@ def divideOverLeftAndTop(foundDigits, A, alpha, B, beta):   # naming with distri
 # putDigitsInGrid = [(x,y,digit)]
 def putDigitsInGrid(foundDigits, A, alpha, B, beta):
     digitsInGrid = {}
-    for (box, digit) in foundDigits:
-        center = (box[0] + box[2]/2, box[1] + box[3]/2)
+    for contour in foundDigits:
+        center = (contour.bounding_rect[0] + contour.bounding_rect[2]/2, contour.bounding_rect[1] + contour.bounding_rect[3]/2)
         indexX = round((center[0] - A) / alpha)
         indexY = round((center[1] - B) / beta)
         predictionX = indexX * alpha + A
         predictionY = indexY * beta + B
         if (
-            predictionX - alpha/2 <= box[0] and predictionX + alpha/2 >= box[0] + box[2] and
-            predictionY - beta/2 <= box[1] and predictionY + beta/2 >= box[1] + box[3]
+            predictionX - alpha/2 <= contour.bounding_rect[0] and predictionX + alpha/2 >= contour.bounding_rect[0] + contour.bounding_rect[2] and
+            predictionY - beta/2 <= contour.bounding_rect[1] and predictionY + beta/2 >= contour.bounding_rect[1] + contour.bounding_rect[3]
             ):
-            digitsInGrid.setdefault((indexX, indexY), []).append((box, digit))
+            digitsInGrid.setdefault((indexX, indexY), []).append((contour))
     return digitsInGrid
     
 def combineDigits(digitsInGrid):
     result = []
-    for ((indexX, indexY), digits) in digitsInGrid.items():
+    for ((indexX, indexY), contours) in digitsInGrid.items():
         number = 0
-        for (box, digit) in sorted(digits, key=lambda tuple: tuple[0]):
-            number = number * 10 + digit
+        for contour in sorted(contours, key=lambda contour: contour.bounding_rect[0]):
+            number = number * 10 + contour.digit
         result.append(((indexX, indexY), number))
     return result
 
