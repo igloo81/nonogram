@@ -14,7 +14,6 @@ def remove_lines(image):
 
     # Create a mask to remove the lines
     mask = np.zeros(image.shape, dtype=np.uint8) * 255  # A white mask
-
     # Draw detected lines on the mask (black color)
     if lines is not None:
         for line in lines:
