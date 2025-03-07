@@ -8,6 +8,13 @@ import unittest
 - sample3 gaat goed
 - sample5 faalt op herkennen van enen. Door het rescalen oid worden de enen hol van binnen
 
+
+
+
+de training gaat matig met de andere fonts. Als je het alleen gebruikt, dan faalt het volledig! De opencv fonts lijken beter
+
+
+
 - sample4 faalt door bepaling grid
 - andere langt niet altijd
     issues door verwijderen lijnen met thresholds
