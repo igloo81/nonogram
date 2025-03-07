@@ -54,9 +54,9 @@ def read_fonts_PIL():
                     font_files.append(os.path.join(dirpath, filename))
 
 def create_random_digit_image():
-    #if (random.random() > .5):
-    #    return create_random_digit_image_CV2()
-    #else:
+    if (random.random() > .75):
+        return create_random_digit_image_CV2()
+    else:
         return create_random_digit_image_PIL()
 
 def create_random_digit_image_CV2():
@@ -66,7 +66,6 @@ def create_random_digit_image_CV2():
     font = random.choice(fonts_cv)
     font_scale_digit = random.randint(font_scale_cv2[0], font_scale_cv2[1])
     text_size = cv2.getTextSize(str(digit), font, font_scale_digit, thickness)[0]
-    print(text_size)
     image_size_source = (max(text_size)*5//4, max(text_size)*5//4)
     text_x = (image_size_source[1] - text_size[0] - random.randint(-shift, shift)) // 2
     text_y = (image_size_source[0] + text_size[1] - random.randint(-shift, shift)) // 2
@@ -78,7 +77,7 @@ def create_random_digit_image_CV2():
     digit_image = cv2.resize(digit_image, (28, 28), interpolation=cv2.INTER_AREA)
     digit_image = cv2.GaussianBlur(digit_image, (5, 5), 0)
     digit_image = cv2.normalize(digit_image, None, 0, 1, cv2.NORM_MINMAX)
-    return (digit_image, digit)    
+    return (digit_image, digit, f"CV_{font}")    
 
 def create_random_digit_image_PIL(fixed_font_file = None):
     read_fonts_PIL()
